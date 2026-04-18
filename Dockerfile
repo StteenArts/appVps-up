@@ -20,6 +20,8 @@ WORKDIR /app
 
 # Copiar desde la etapa build
 COPY --from=build /out .
+## Enviroment Variable
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 # Exponer puerto
 EXPOSE 8080
