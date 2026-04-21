@@ -1,0 +1,198 @@
+@{
+    //To share the path in bar search
+    ViewData["Title"] = "Events";
+}
+
+@model IEnumerable<appVps_up.Models.Events>
+
+<div class="p-4 d-flex row">
+    <div class="col-md-6">
+        <h1>Page to create events</h1>  
+    </div>
+    <div class="col-md-6 d-flex justify-content-end h-25">
+        <button data-bs-toggle="modal" data-bs-target="#modalCreate" class="btn btn-outline-success">Crear Evento</button>    
+    </div>
+</div>
+
+<!-- Table -->
+<div class="text-center">
+  
+    <table class="table table-striped bg-primary">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var ev in Model)
+        {
+            var modalsee = "modalSee-" + ev.Id;
+            var modaledit = "modalEdit-" + ev.Id;
+            <tr>
+                <td>@ev.Name</td>
+                <td>@ev.Date</td>
+                <td>@ev.Status</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#@modalsee" >
+                        Ver
+                    </button>
+                    <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#@modaledit">
+                        Editar
+                    </button>
+                    <button class="btn btn-outline-danger">Eliminar</button>
+                </td>
+            </tr>
+            
+            <!-- Modal to see-->
+            <div class="modal fade" id="@modalsee" tabindex="-1" aria-labelledby="modalSeeLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalSeeLabel">@ev.Name (@ev.Status)</h1>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="@ev.Id">
+                            <div class="row me-4 ms-4">
+                                <div class="col-md-4 pb-4 d-flex justify-content-start">
+                                    <label class="fw-bold">Nombre:</label>
+                                    <i class="ms-2">@ev.Name</i>
+                                </div>
+                                <div class="col-md-4 d-flex justify-content-start">
+                                    <label class="fw-bold">Fecha:</label>
+                                    <i class="ms-2">@ev.Date.ToString("yyyy-MM-dd")</i>
+                                </div>
+                                <div class="col-md-4 d-flex justify-content-start">
+                                    <label class="fw-bold">Estado:</label>
+                                    <i class="ms-2">@ev.Status</i>
+                                </div>
+                                <div class="">
+                                    <hr/>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="justify-content-start d-flex">Descripción:</label>
+                                    <textarea class="form-control" readonly="">@ev.Description</textarea>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- To end modal to see-->
+            
+            <!-- Start to modal edit-->
+            <div class="modal fade" id="@modaledit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalEditLabel">
+                                <span class="text-dark me-3">Editando:</span> <br/>
+                                <i>@ev.Name (@ev.Status)</i>
+                            </h1>
+                        </div>
+                        <form asp-action="Edit" asp-controller="Event" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" value="@ev.Id" name="Id">
+                            <div class="row me-4 ms-4 gap-3">
+                                <div class="col-md-4 row">
+                                    <label class="fw-bold">Nombre:</label>
+                                    <input type="text" class="form-control" value="@ev.Name" name="Name"/>
+                                </div>
+                                <div class="col-md-4 row">
+                                    <label class="fw-bold">Fecha:</label>
+                                    <input type="date" class="form-control" value="@ev.Date.ToString("yyyy-MM-dd")" name="Date"/>
+                                </div>
+                                <div class="col-md-4 row">
+                                    <label class="fw-bold">Estado:</label>
+                                    <select class="form-control" name="Status">
+                                        <option disabled="" selected="@ev.Status">@ev.Status</option>
+                                        <option value="published">Published</option>
+                                        <option value="cancelled">Cancelled</option>
+                                        <option value="draft">Draft</option>
+                                    </select>
+                                </div>
+                                <div class="">
+                                    <hr/>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="justify-content-start d-flex">Descripción:</label>
+                                    <textarea class="form-control" value="@ev.Description" name="description">@ev.Description</textarea>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-outline-success">Guardar</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- End modal to edit event-->
+        }
+        </tbody>
+    </table>  
+</div>
+
+<!--Modal to create event --> 
+<div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalCreateLabel">
+                    <span class="text-dark me-3">Crear Evento</span> <br/>
+                </h1>
+            </div>
+            <form asp-controller="Event" asp-action="Store" method="post">
+                <div class="modal-body">
+                    <div class="row me-4 ms-4 gap-3">
+       
+                        <div class="col-md-4 row">
+                            <label class="fw-bold">Nombre:</label>
+                            <input type="text" class="form-control" name="Name"/>
+                        </div>
+                        <div class="col-md-4 row">
+                            <label class="fw-bold" >Fecha:</label>
+                            <input type="date" class="form-control" name="Date"/>
+                        </div>
+                        <div class="col-md-4 row">
+                            <label class="fw-bold" >Estado:</label>
+                            <select class="form-control" name="Status">
+                                <option disabled="" selected="" class="text-muted">Seleccione un valor</option>
+                                <option value="Published">Published</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="Draft">Draft</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <hr/>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="justify-content-start d-flex">Descripción:</label>
+                            <textarea class="form-control" rows="15" cols="20" name="Description"></textarea>
+                        </div>
+                 
+                    
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-outline-success">Crear</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+<!-- End modal to crete -->
+
+

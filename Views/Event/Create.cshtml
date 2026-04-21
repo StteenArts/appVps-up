@@ -1,0 +1,26 @@
+<!-- Form to register event -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form id="eventForm">
+            <input type="hidden" id="eventId">
+
+            <div class="mb-2">
+                <input type="text" id="title" class="form-control" placeholder="Event Title" required>
+            </div>
+
+            <div class="mb-2">
+                <input type="date" id="date" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <input type="text" id="location" class="form-control" placeholder="Location" required>
+            </div>
+
+            <div class="mb-2">
+                <textarea id="description" class="form-control" placeholder="Description"></textarea>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Save Event</button>
+        </form>
+    </div>
+</div>

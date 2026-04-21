@@ -11,4 +11,5 @@ public class MysqlDbContext : DbContext
     }
     
     public DbSet<User> users { get; set; }
+    public DbSet<Events> events { get; set; }
 }
