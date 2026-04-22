@@ -31,10 +31,13 @@
         {
             var modalsee = "modalSee-" + ev.Id;
             var modaledit = "modalEdit-" + ev.Id;
+            var modalDelete = "modalDelete-" + ev.Id;
+            
+            var status = ev.Status ?? "Sin estado";
             <tr>
                 <td>@ev.Name</td>
                 <td>@ev.Date</td>
-                <td>@ev.Status</td>
+                <td>@status</td>
                 <td>
                     <!-- Button trigger modal -->
                     <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#@modalsee" >
@@ -43,7 +46,7 @@
                     <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#@modaledit">
                         Editar
                     </button>
-                    <button class="btn btn-outline-danger">Eliminar</button>
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#@modalDelete">Eliminar</button>
                 </td>
             </tr>
             
@@ -52,7 +55,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="modalSeeLabel">@ev.Name (@ev.Status)</h1>
+                            <h1 class="modal-title fs-5" id="modalSeeLabel">@ev.Name (@status)</h1>
                         </div>
                         <div class="modal-body">
                             <input type="hidden" id="@ev.Id">
@@ -67,7 +70,7 @@
                                 </div>
                                 <div class="col-md-4 d-flex justify-content-start">
                                     <label class="fw-bold">Estado:</label>
-                                    <i class="ms-2">@ev.Status</i>
+                                    <i class="ms-2">@status</i>
                                 </div>
                                 <div class="">
                                     <hr/>
@@ -137,6 +140,32 @@
                 </div>
             </div>
             <!-- End modal to edit event-->
+            
+            <!-- Modal to confirmated deleted-->
+            <div class="modal fade" id="@modalDelete">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+      
+                        <div class="modal-header text-center">
+                            <h5 class="modal-title">Confirmar eliminación: ( @ev.Name )</h5>
+                        </div>
+
+                        <div class="modal-body fw-bold">
+                            ¿Estás seguro de eliminar este registro?
+                        </div>
+
+                        <div class="modal-footer">
+                            <form method="post" asp-action="Delete" asp-controller="Event">
+                                <input type="hidden" value="@ev.Id" name="id"/>
+                                
+                                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                            </form>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         }
         </tbody>
     </table>  
